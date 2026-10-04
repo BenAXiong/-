@@ -1,0 +1,1041 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Existing Amis reading and listening tools, three ideas for new learning products, and how they could fit with 語浪 SASHAWAVES.">
+  <link rel="icon" href="data:,">
+  <title>語浪 x Ben - dev direction & products proposal</title>
+  <style>
+    :root {
+      --paper: #f7f5ef;
+      --panel: #fffefa;
+      --ink: #25312d;
+      --muted: #58665e;
+      --line: #d5d8cc;
+      --line-soft: #e4e5dc;
+      --green: #305a49;
+      --blue: #365771;
+      --rust: #925031;
+      --plum: #715268;
+      --stone: #6b7069;
+      --soft-green: #edf1e8;
+      --soft-blue: #eaf0f3;
+      --soft-rust: #f4ece2;
+      --soft-plum: #f1eaf0;
+      --soft-stone: #eceee6;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Segoe UI", "Helvetica Neue", sans-serif;
+      --mono: "Cascadia Code", Consolas, monospace;
+      --nav-height: 62px;
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.6; font-variant-numeric: tabular-nums; }
+    a { color: var(--green); text-underline-offset: 4px; }
+    a:hover { color: var(--ink); text-decoration-thickness: 2px; }
+    button, summary, a { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+    .skip-link { position: fixed; top: 12px; left: 12px; z-index: 100; padding: 10px 16px; background: var(--panel); border: 1px solid var(--line); transform: translateY(-180%); }
+    .skip-link:focus { transform: translateY(0); }
+    .wrap { width: min(1120px, calc(100% - 80px)); margin-inline: auto; }
+    h1, h2, h3, h4, p { margin-top: 0; }
+    h1, h2, .product-number, .discussion-number { font-family: var(--serif); font-weight: 400; }
+    h1 { font-size: clamp(36px, 4.2vw, 50px); line-height: 1.1; letter-spacing: -.03em; margin-bottom: 18px; text-wrap: balance; }
+    h2 { font-size: 34px; line-height: 1.15; letter-spacing: -.02em; margin-bottom: 14px; text-wrap: balance; }
+    h3 { font-size: 18px; line-height: 1.3; letter-spacing: -.01em; margin-bottom: 8px; }
+    h4 { font-size: 14px; margin-bottom: 6px; }
+    p { margin-bottom: 14px; text-wrap: pretty; }
+    p:last-child { margin-bottom: 0; }
+    ul { padding-left: 19px; margin: 0 0 14px; }
+    li { margin: 5px 0; }
+    li::marker { color: var(--muted); }
+    .muted { color: var(--muted); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+
+    /* Masthead + intro */
+    .masthead { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 22px 0 16px; border-bottom: 1px solid var(--line); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+    .brand { color: var(--ink); font-weight: 700; letter-spacing: .16em; }
+    .intro { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); align-items: end; gap: 64px; padding: 56px 0 44px; }
+    .intro-lead p:not(.eyebrow) { color: var(--muted); font-size: 17px; max-width: 600px; }
+    .review-note { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--green); padding: 20px 22px 18px; font-size: 14px; }
+    .review-note .eyebrow { color: var(--green); margin-bottom: 8px; }
+    .review-note p { margin-bottom: 12px; }
+    .review-note a { font-size: 13px; font-weight: 650; text-decoration: none; }
+    .review-note a:hover { text-decoration: underline; }
+
+    /* Navigation */
+    .navigation { position: sticky; top: 0; z-index: 20; background: rgba(247, 245, 239, .94); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-block: 1px solid var(--line); }
+    .nav-progress { position: absolute; left: 0; top: -1px; height: 2px; width: 100%; background: var(--green); transform-origin: 0 50%; transform: scaleX(0); }
+    .nav-inner { display: flex; align-items: stretch; justify-content: space-between; gap: 24px; }
+    .nav-links { display: flex; overflow-x: auto; scrollbar-width: none; margin-left: -14px; }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links a { --tone: var(--green); position: relative; flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center; gap: 1px; min-height: 60px; padding: 10px 14px 11px; color: var(--muted); text-decoration: none; font-size: 14px; line-height: 1.25; white-space: nowrap; transition: color .15s; }
+    .nav-links a small { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; transition: color .15s; }
+    .nav-links a::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 2px; background: var(--tone); transform: scaleX(0); transform-origin: 0 50%; transition: transform .2s ease; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a[aria-current="location"] { color: var(--ink); }
+    .nav-links a[aria-current="location"] small { color: var(--tone); }
+    .nav-links a[aria-current="location"]::after { transform: scaleX(1); }
+    .nav-links a:focus-visible { outline-offset: -4px; }
+    .nav-links .t-p1 { --tone: var(--blue); }
+    .nav-links .t-p2 { --tone: var(--rust); }
+    .nav-links .t-p3 { --tone: var(--stone); }
+    .nav-title { flex: 0 0 auto; display: flex; align-items: center; font-family: var(--serif); font-size: 15px; color: var(--muted); opacity: 0; transform: translateY(3px); transition: opacity .2s, transform .2s; pointer-events: none; }
+    .navigation.is-stuck .nav-title { opacity: 1; transform: none; }
+
+    main { padding-bottom: 56px; }
+    main, section[id], article[id] { scroll-margin-top: calc(var(--nav-height) + 20px); }
+
+    /* Shared chips */
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 650; line-height: 1.6; letter-spacing: .02em; white-space: nowrap; background: var(--wash, var(--soft-green)); color: var(--tone, var(--green)); }
+    .chip.outline { background: var(--panel); border: 1px solid var(--line); color: var(--muted); font-weight: 500; }
+    .phase-label { --tone: var(--blue); --wash: var(--soft-blue); display: inline-block; margin-bottom: 14px; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--tone); }
+    .phase-label::before { content: ""; display: inline-block; width: 18px; height: 2px; margin-right: 10px; vertical-align: middle; background: var(--tone); }
+    .phase-label.p2 { --tone: var(--rust); --wash: var(--soft-rust); }
+    .phase-label.p3 { --tone: var(--stone); --wash: var(--soft-stone); }
+    .phase-label.discuss { --tone: var(--green); }
+
+    /* Overview */
+    .overview { padding: 44px 0 52px; }
+    .overview-introduction { max-width: 760px; }
+    .overview-introduction p { color: var(--muted); }
+    .phase-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 32px; border: 1px solid var(--line); border-top: 0; background: var(--panel); }
+    .phase-cell { --tone: var(--blue); --wash: var(--soft-blue); position: relative; display: flex; flex-direction: column; padding: 20px 24px 0; border-top: 3px solid var(--tone); }
+    .phase-cell.p2 { --tone: var(--rust); --wash: var(--soft-rust); }
+    .phase-cell.p3 { --tone: var(--stone); --wash: var(--soft-stone); }
+    .phase-cell + .phase-cell { border-left: 1px solid var(--line); }
+    .phase-cell + .phase-cell::before { content: "→"; position: absolute; z-index: 1; left: -12px; top: 18px; width: 23px; height: 23px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--panel); color: var(--muted); font-size: 12px; line-height: 1; }
+    .phase-kicker { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--tone); }
+    .phase-cell h3 { font-size: 18px; margin-bottom: 14px; }
+    .phase-items { list-style: none; padding: 0; margin: 0 0 20px; border-top: 1px solid var(--line-soft); }
+    .phase-items li { display: grid; gap: 2px; margin: 0; padding: 11px 0; border-bottom: 1px solid var(--line-soft); font-size: 14px; line-height: 1.4; }
+    .phase-items .item-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+    .phase-items a { color: var(--ink); font-weight: 650; text-decoration: none; }
+    .phase-items a:hover { color: var(--tone); text-decoration: underline; }
+    .phase-items .meta { font-size: 13px; color: var(--muted); }
+    .status { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--muted); }
+    .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--rust); flex: 0 0 auto; }
+    .status.ready::before { background: var(--green); }
+    .phase-text { font-size: 14px; color: var(--muted); line-height: 1.5; margin-bottom: 20px; }
+    .phase-discuss { margin: auto -24px 0; padding: 12px 24px 14px; background: #f8f7f1; border-top: 1px solid var(--line-soft); font-size: 13px; line-height: 1.45; }
+    .phase-discuss span { display: block; margin-bottom: 2px; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--tone); }
+
+    /* Chapters */
+    .chapter { padding: 56px 0 8px; border-top: 1px solid var(--line); }
+    .chapter-heading { max-width: 760px; margin-bottom: 32px; }
+    .chapter-heading h2 { margin-bottom: 12px; }
+    .chapter-heading h2:last-child { margin-bottom: 0; }
+    .chapter-heading p { color: var(--muted); }
+
+    /* Comparison table */
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); background: var(--panel); }
+    .compare { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px; line-height: 1.45; text-align: left; }
+    .compare caption { caption-side: top; text-align: left; padding: 13px 20px; font-size: 13px; color: var(--muted); border: 1px solid var(--line); border-bottom: 0; background: var(--panel); }
+    .compare th, .compare td { padding: 14px 20px; vertical-align: top; border-bottom: 1px solid var(--line-soft); }
+    .compare thead th, .compare thead td { border-bottom: 1px solid var(--line); }
+    .compare td, .compare thead th { border-left: 1px solid var(--line-soft); width: 27%; }
+    .compare thead th { --tone: var(--green); padding-top: 18px; padding-bottom: 16px; vertical-align: bottom; font-weight: 400; }
+    .compare thead th.mission { --tone: var(--rust); --wash: var(--soft-rust); }
+    .compare thead th.drama { --tone: var(--plum); }
+    .compare .col-num { display: block; margin-bottom: 2px; font-family: var(--serif); font-size: 14px; color: var(--tone); }
+    .compare .col-name { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
+    .compare thead a { color: var(--ink); font-size: 17px; font-weight: 650; text-decoration: none; }
+    .compare thead a:hover { color: var(--tone); text-decoration: underline; }
+    .compare tbody th { width: 19%; padding-top: 16px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .compare tbody tr:last-child > * { border-bottom: 0; }
+    .compare .pref { background: #fcf7f1; }
+    .compare thead .pref { box-shadow: inset 0 3px 0 var(--rust); }
+    .compare .sub { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
+    .scale { display: inline-flex; gap: 3px; margin-right: 10px; vertical-align: 1px; }
+    .scale i { width: 14px; height: 6px; background: var(--line-soft); }
+    .scale i.on { background: var(--ink); }
+    .compare .chip { --tone: var(--ink); --wash: var(--soft-stone); }
+    .comparison-note { max-width: 760px; margin: 16px 0 0; font-size: 14px; color: var(--muted); }
+
+    /* Products */
+    .product { --accent: var(--green); --wash: var(--soft-green); padding: 44px 0 44px; border-top: 1px solid var(--line); }
+    .comparison-note + .product { margin-top: 44px; }
+    .product.mission { --accent: var(--rust); --wash: var(--soft-rust); }
+    .product.drama { --accent: var(--plum); --wash: var(--soft-plum); }
+    .product.existing { --accent: var(--blue); --wash: var(--soft-blue); }
+    .product-top { display: grid; grid-template-columns: 56px minmax(0, 1fr); align-items: start; margin-bottom: 24px; }
+    .product-number { font-size: 36px; line-height: 1.05; color: var(--accent); }
+    .product h3 { font-size: 28px; line-height: 1.2; letter-spacing: -.02em; margin-bottom: 10px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tags .chip { --tone: var(--accent); }
+    .product-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 48px; }
+    .product-lead { font-size: 19px; line-height: 1.5; max-width: 640px; margin-bottom: 14px; }
+    .product-main > p:not(.product-lead), .product-main > ul { font-size: 15px; }
+    .product-main h4 { margin-top: 22px; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+    .facts { margin: 22px 0 0; border-top: 1px solid var(--line); font-size: 14px; }
+    .facts > div { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--line-soft); }
+    dt { font-weight: 650; }
+    dd { margin: 0; }
+    .example { margin: 22px 0 0; padding: 16px 18px; background: var(--wash); font-size: 14px; }
+    .example strong { display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+    .split { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+    .split > div { padding-top: 9px; border-top: 2px solid var(--line); font-size: 13px; line-height: 1.5; }
+    .split > div:first-child { border-top-color: var(--accent); }
+    .split strong { display: block; margin-bottom: 3px; font-size: 14px; }
+    .production-note { font-size: 13px; margin: 12px 0 0; color: var(--muted); }
+
+    /* Figures + galleries */
+    figure { margin: 0; }
+    .image-slot, .product-preview { position: relative; aspect-ratio: 4 / 3; background: var(--wash, var(--soft-green)); border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; }
+    .image-slot img, .product-preview img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .image-slot img[hidden], .product-preview img[hidden] { display: none; }
+    .image-gallery { min-width: 0; align-self: start; }
+    .gallery-track { overflow: hidden; }
+    .gallery-slide[hidden] { display: none; }
+    .gallery-extension .image-slot { aspect-ratio: 907 / 540; }
+    .gallery-player { width: 100%; max-width: 270px; margin-inline: auto; }
+    .gallery-player .image-slot { aspect-ratio: 720 / 1518; }
+    .gallery-controls { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; }
+    .gallery-controls[hidden] { display: none; }
+    .gallery-controls button { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--line); background: var(--panel); color: var(--accent); font: inherit; font-size: 15px; cursor: pointer; }
+    .gallery-controls button:hover { background: var(--wash); }
+    .gallery-controls button:disabled { opacity: .35; cursor: default; }
+    .working-split .detail-content { max-width: none; padding-right: 0; }
+    .product-preview-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-bottom: 24px; }
+    .product-preview:nth-child(2) { --wash: var(--soft-rust); }
+    .product-preview:nth-child(3) { --wash: var(--soft-plum); }
+
+    /* Disclosures */
+    .disclosures { margin-top: 32px; border-top: 1px solid var(--line); }
+    details { border-bottom: 1px solid var(--line); }
+    summary { cursor: pointer; padding: 14px 0; font-size: 15px; font-weight: 650; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 20px; transition: color .15s; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; flex: 0 0 24px; height: 24px; display: grid; place-items: center; border: 1px solid var(--line); background: var(--panel); color: var(--accent); font-size: 16px; line-height: 1; font-weight: 400; transition: background .15s; }
+    details[open] > summary::after { content: "−"; background: var(--wash); }
+    summary:hover { color: var(--accent); }
+    summary:hover::after { background: var(--wash); }
+    .detail-content { padding: 0 44px 22px 0; font-size: 15px; max-width: 860px; }
+    .detail-content ul { margin-bottom: 0; }
+    .pilot-signals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 16px; }
+    .pilot-signals > div { padding-top: 10px; border-top: 2px solid var(--green); }
+    .pilot-signals > div:nth-child(2) { border-top-color: var(--rust); }
+    .pilot-signals > div:nth-child(3) { border-top-color: var(--stone); }
+    .pilot-signals h4 { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 5px; }
+    .pilot-signals p { font-size: 14px; line-height: 1.5; }
+
+    /* Phase 3 */
+    .later-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .later-grid > div { padding: 18px 18px 20px; background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--soft-stone); }
+    .later-grid h3 { font-size: 15px; margin-bottom: 6px; }
+    .later-grid p { font-size: 14px; line-height: 1.5; color: var(--muted); }
+    .other-directions { max-width: 760px; font-size: 14px; color: var(--muted); margin: 18px 0 48px; }
+
+    /* Discussion */
+    .discussion-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .discussion-item { display: grid; grid-template-columns: 40px minmax(0, 1fr); padding: 20px 22px 22px 18px; background: var(--panel); border: 1px solid var(--line); }
+    .discussion-number { font-size: 26px; line-height: 1; color: var(--green); }
+    .discussion-item h3 { font-size: 16px; margin-bottom: 6px; }
+    .discussion-item p { font-size: 14px; line-height: 1.55; color: var(--muted); }
+    .discussion-item.wide { grid-column: 1 / -1; background: var(--soft-green); border-color: #cfd9cb; }
+
+    footer { display: flex; justify-content: space-between; gap: 20px; border-top: 1px solid var(--line); padding: 20px 0 32px; color: var(--muted); font-size: 13px; }
+    footer a { text-decoration: none; font-weight: 650; }
+
+    @media (max-width: 980px) {
+      .nav-title { display: none; }
+      .later-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 900px) {
+      .wrap { width: calc(100% - 40px); }
+      .intro { gap: 32px; }
+      .product-grid { gap: 28px; }
+      .phase-cell { padding: 18px 18px 0; }
+      .phase-discuss { margin-inline: -18px; padding-inline: 18px; }
+    }
+    @media (max-width: 720px) {
+      .wrap { width: calc(100% - 32px); }
+      .intro, .product-grid, .discussion-grid { grid-template-columns: minmax(0, 1fr); }
+      .intro { padding: 36px 0 32px; gap: 24px; }
+      .masthead { font-size: 10px; gap: 12px; }
+      .nav-links { margin-left: -12px; }
+      .nav-links a { padding-inline: 12px; }
+      .nav-links a::after { left: 12px; right: 12px; }
+      .phase-strip { grid-template-columns: minmax(0, 1fr); border-top: 0; }
+      .phase-cell + .phase-cell { border-left: 0; }
+      .phase-cell + .phase-cell::before { display: none; }
+      .chapter { padding-top: 40px; }
+      h2 { font-size: 29px; }
+      .product { padding-block: 34px; }
+      .product-top { grid-template-columns: 42px minmax(0, 1fr); }
+      .product-number { font-size: 30px; }
+      .product h3 { font-size: 24px; }
+      .facts > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+      .split, .pilot-signals, .later-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+      .detail-content { padding-right: 0; }
+      .product-preview-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+      .discussion-item.wide { grid-column: auto; }
+      footer { flex-direction: column; gap: 5px; }
+    }
+    @media print {
+      @page { size: A4; margin: 15mm; }
+      :root { --paper: #fff; --panel: #fff; }
+      body { font-size: 10pt; line-height: 1.45; background: #fff; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .wrap { width: 100%; }
+      .navigation, .skip-link, .gallery-controls { display: none; }
+      .masthead { padding: 0 0 8px; font-size: 7.5pt; }
+      .intro { padding: 18px 0 20px; grid-template-columns: 1.6fr 1fr; gap: 24px; }
+      .intro-lead p:not(.eyebrow) { font-size: 10.5pt; }
+      h1 { font-size: 26pt; }
+      h2 { font-size: 20pt; }
+      .overview { padding: 10px 0 20px; }
+      .phase-strip { grid-template-columns: repeat(3, 1fr); margin-top: 16px; }
+      .phase-cell { padding: 12px 12px 0; }
+      .phase-cell + .phase-cell::before { display: none; }
+      .phase-cell h3 { font-size: 11pt; }
+      .phase-items li, .phase-text { font-size: 8.5pt; }
+      .phase-discuss { margin-inline: -12px; padding: 8px 12px; font-size: 8pt; }
+      .chapter { padding: 22px 0 0; }
+      .chapter-heading { margin-bottom: 14px; }
+      .chapter-heading p { font-size: 9.5pt; }
+      .table-wrap { overflow: visible; }
+      .compare { min-width: 0; font-size: 8.5pt; }
+      .compare th, .compare td { padding: 8px 9px; }
+      .compare thead a { font-size: 10pt; }
+      .compare tbody th { font-size: 7pt; }
+      thead { display: table-header-group; }
+      tr { break-inside: avoid; }
+      .product { padding: 18px 0; }
+      .product h3 { font-size: 17pt; }
+      .product-top { break-after: avoid; margin-bottom: 12px; }
+      .product-grid { display: block; }
+      .product-preview-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .split { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .product-lead { font-size: 11.5pt; }
+      .product-main > p:not(.product-lead), .product-main > ul, .facts, .example, .detail-content { font-size: 9pt; }
+      .split > div, .pilot-signals p, .later-grid p, .discussion-item p { font-size: 8.5pt; }
+      .product-grid figure { max-width: 75mm; margin-block: 12px; }
+      .image-slot { aspect-ratio: 4 / 3; }
+      .image-slot img { max-height: 55mm; object-fit: contain; }
+      .image-gallery { max-width: none; width: 100%; margin-block: 12px; }
+      .gallery-track { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; overflow: visible; }
+      .gallery-player .gallery-track { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .image-gallery .gallery-slide, .image-gallery .gallery-slide[hidden] { display: block; break-inside: avoid; }
+      .image-gallery .image-slot { aspect-ratio: auto; }
+      .image-gallery .image-slot img { height: auto; }
+      .disclosures { margin-top: 14px; }
+      details::details-content { content-visibility: visible !important; display: block !important; }
+      details > .detail-content { display: block !important; }
+      details { break-inside: avoid; }
+      summary { font-size: 10pt; padding-block: 8px; }
+      summary::after { display: none; }
+      .detail-content { padding: 0 0 10px; }
+      .later-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+      .later-grid > div { padding: 10px; }
+      .discussion-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .discussion-item { padding: 12px; }
+      h2, h3, h4, summary { break-after: avoid; }
+      .phase-strip, figure, .example, .discussion-item, .later-grid, .split, .pilot-signals { break-inside: avoid; }
+      p, li { orphans: 3; widows: 3; }
+      footer { font-size: 8pt; padding-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to proposal</a>
+  <header class="wrap">
+    <div class="masthead">
+      <span class="brand">Dev direction & products proposal</span>
+      <span>2026/10/05</span>
+    </div>
+    <div class="intro">
+      <div class="intro-lead">
+        <h1>Let's decide what comes next!</h1>
+        <p>Read Phase 1 to know more about the tools I've already developed
+          and which could be quick and valuable additions to Sashawaves.
+          Phase 2 is the exciting new stuff, I hope some of them will be a good fit.</p>
+      </div>
+    </div>
+  </header>
+
+  <nav class="navigation" aria-label="Proposal sections">
+    <div class="nav-progress" aria-hidden="true"></div>
+    <div class="wrap nav-inner">
+      <div class="nav-links">
+        <a href="#overview" aria-current="location"><small>Overview</small>How it fits together</a>
+        <a href="#p1" class="t-p1"><small>Phase 1</small>Existing tools</a>
+        <a href="#p2" class="t-p2"><small>Phase 2</small>New product ideas</a>
+        <a href="#p3" class="t-p3"><small>Phase 3</small>Later ideas</a>
+        <a href="#discussion"><small>Next steps</small>Discussion</a>
+      </div>
+      <span class="nav-title" aria-hidden="true">語浪 × Ben</span>
+    </div>
+  </nav>
+
+  <main id="content" class="wrap">
+    <section id="overview" class="overview" aria-labelledby="overview-title">
+      <div class="overview-introduction">
+        <h2 id="overview-title">How the pieces fit together</h2>
+        <p>The big question is what new learning products would be worth making and be viable.
+          I’ve outlined three ideas in Phase 2 below.
+          Since you just developed an exam-prep product, I thought we could focus the next phase
+          on products that are fun, useful and also structured.
+          Each combines content people might enjoy with guidance that helps them understand and
+          use the language. They would need new content, recordings, or production work,
+          so I’d like us to compare them before committing to that work.</p>
+        <p>As I've told you, I also have on my hands two tools that could interest you and learners.
+          The first is a powerful extension to analyze Amis words on any web page
+          and instantly display definitions, morphology and example sentences.
+          The second is a player for the ILRDF videos with basic features.
+          I'd love to see people get value from them.
+          They're both nearly ready to publish so I believe this is a manageable first step:
+          we can release something useful and see how we work together while discussing Phase 2.</p>
+      </div>
+
+      <div class="phase-strip">
+        <div class="phase-cell p1">
+          <div class="phase-kicker">Phase 1 <span class="chip">Now</span></div>
+          <h3>Release existing tools</h3>
+          <ul class="phase-items">
+            <li><a href="#extension">Webpage reading extension</a><span class="status ready">Ready for you to test this week</span></li>
+            <li><a href="#player">Amis listening player</a><span class="status">80% ready · needs UI/UX polish</span></li>
+          </ul>
+          <p class="phase-discuss"><span>To discuss</span>How to introduce them</p>
+        </div>
+        <div class="phase-cell p2">
+          <div class="phase-kicker">Phase 2 <span class="chip">Next</span></div>
+          <h3>Choose a new product to explore</h3>
+          <ul class="phase-items">
+            <li><a href="#start-here">Start Here</a><span class="meta">A free first lesson.</span></li>
+            <li><span class="item-head"><a href="#mission-packs">Mission Packs</a></span><span class="meta">Paid situational speaking practice for authentic Amis.</span></li>
+            <li><a href="#microdrama">Amis Microdrama</a><span class="meta">Short stories with learning help. (Amis Netflix!)</span></li>
+          </ul>
+          <p class="phase-discuss"><span>To discuss</span>The best value first product and its features.</p>
+        </div>
+        <div class="phase-cell p3">
+          <div class="phase-kicker">Phase 3 <span class="chip">Later</span></div>
+          <h3>Keep longer-term ideas in view</h3>
+          <p class="phase-text">A curriculum, graded videos, or an audio course could follow,
+            depending on the earlier results and available content.</p>
+          <p class="phase-discuss"><span>To discuss</span>Nothing for now.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="p1" class="chapter" aria-labelledby="p1-title">
+      <div class="chapter-heading">
+        <span class="phase-label">Phase 1 · Existing tools</span>
+        <h2 id="p1-title">Works ready for release</h2>
+      </div>
+
+      <article id="extension" class="product existing" aria-labelledby="extension-title">
+        <div class="product-top"><span class="product-number">01</span><div>
+          <h3 id="extension-title">Amis browser extension</h3>
+          <div class="tags"><span class="chip">Free</span><span class="chip outline">Chrome desktop</span><span class="chip outline">Ready to test this week</span></div></div></div>
+        <div class="product-grid">
+          <div class="product-main">
+            <p class="product-lead">Look up Amis while reading a webpage, explore meanings and examples, and keep useful material for later.</p>
+            <h4>Existing learner experience</h4>
+            <ul>
+              <li>Hover or select an Amis word or sentence on a webpage to look it up.</li>
+              <li>Root and affix information displayed automatically.</li>
+              <li>Compare definitions and examples across seven sources.</li>
+              <li>Explore a sentence in the side panel.</li>
+              <li>Listen to source audio, copy sentences, save words or examples for review.</li>
+            </ul>
+          </div>
+          <div class="image-gallery gallery-extension" role="region" aria-label="Browser extension screenshots">
+            <div class="gallery-track" tabindex="0" aria-label="Browser extension image gallery">
+              <figure class="gallery-slide"><div class="image-slot"><img src="assets/proposal/tapelik/1-ciorippay-green.png" alt="Amis word lookup with a green accent" width="907" height="540"></div></figure>
+              <figure class="gallery-slide"><div class="image-slot"><img src="assets/proposal/tapelik/3-orip-drill-green.png" alt="Exploring a root and its examples with a green accent" width="907" height="540"></div></figure>
+              <figure class="gallery-slide"><div class="image-slot"><img src="assets/proposal/tapelik/4-ciorippay-red.png" alt="Amis word lookup with a red accent" width="907" height="540"></div></figure>
+              <figure class="gallery-slide"><div class="image-slot"><img src="assets/proposal/tapelik/6-orip-drill-red.png" alt="Exploring a root and its examples with a red accent" width="907" height="540"></div></figure>
+              <figure class="gallery-slide"><div class="image-slot"><img src="assets/proposal/tapelik/7-miorip-correction-green.png" alt="Lookup correcting a word to its root" width="907" height="540"></div></figure>
+              <figure class="gallery-slide"><div class="image-slot"><img src="assets/proposal/tapelik/8-urip-alt-spelling-green.png" alt="Lookup recognizing an alternate spelling" width="907" height="540"></div></figure>
+            </div>
+
+            <div class="gallery-controls" hidden><button type="button" data-direction="-1" aria-label="Previous extension screenshot">←</button><button type="button" data-direction="1" aria-label="Next extension screenshot">→</button></div>
+          </div>
+        </div>
+        <div class="disclosures">
+          <details><summary>Proposed first release</summary><div class="detail-content">
+            <p>A free, Amis-only Chrome desktop extension built around
+              lookup → examples/listening → sentence reading → saved review.</p>
+            <p>After reworking the side panel, menus UI, onboarding, and final identity,
+              the extension will be ready for testing and store update (already submitted).</p>
+            <p>The tool will be linked for sending feedback to 語浪.
+              Feedback can be used to shape subsequent releases.</p>
+            <p>Mobile reach matters for your audience, so a quick mobile version route is worth testing.
+              A desktop app would also enable looking up words in other apps (e.g. Line).</p>
+          </div></details>
+          <details><summary>Relationship to 語浪 &amp; revenue</summary><div class="detail-content">
+            <p>The working version already uses 語浪’s attribution and visual assets.
+              It currently has a temporary name, Tapelik, so we’d choose its public name before publishing.
+              We can also decide whether it carries 語浪’s brand, a shared identity, or an independent name.</p>
+            <p>Saving material directly to the user's 語浪 account would be a great addition.</p>
+            <p>Potential paid feature: integrate 語浪's AI for translation and grammar help.
+              Dictionary content is licensed for non-commercial use,
+              so the paid boundary needs review before launch.</p>
+          </div></details>
+          <details><summary>Choices to discuss</summary><div class="detail-content">
+            <p>The public name, first-release features, quiet pilot versus broader launch, and which links to the 語浪 website would be useful.</p>
+          </div></details>
+        </div>
+      </article>
+
+      <article id="player" class="product existing" aria-labelledby="player-title">
+        <div class="product-top"><span class="product-number">02</span><div>
+          <h3 id="player-title">Amis player</h3>
+          <div class="tags"><span class="chip">Free</span><span class="chip outline">Integration tbd</span><span class="chip outline">80% ready</span></div></div></div>
+        <div class="product-grid">
+          <div class="product-main">
+            <p class="product-lead">Listen to ILRDF Amis recordings with bilingual text
+              and tools for understanding and repeated practice.</p>
+            <h4>Existing learner experience</h4>
+            <ul>
+              <li>Browse 187 recordings with Amis/Chinese transcripts.</li>
+              <li>Sort by language variety or title/text search.</li>
+              <li>Follow synchronized subtitles and word highlighting.</li>
+              <li>Repeat a sentence or pause automatically.</li>
+              <li>Tap words for offline lookup, get instant definitions even with non-standard spelling.</li>
+              <li>Hide a subtitle language, and pick up from a remembered position.</li>
+              <li>Favorite recordings and download audio for offline practice
+                (optional video available online).</li>
+            </ul>
+          </div>
+          <div class="image-gallery gallery-player" role="region" aria-label="Amis player screenshots">
+            <div class="gallery-track" tabindex="0" aria-label="Amis player image gallery">
+              <figure class="gallery-slide"><div class="image-slot"><img src="assets/proposal/player/library.jpg" alt="Amis recording library with language-variety filters" width="720" height="1447"></div></figure>
+              <figure class="gallery-slide"><div class="image-slot"><img src="assets/proposal/player/playback.jpg" alt="Video playback with synchronized Amis and Chinese subtitles" width="720" height="1518"></div></figure>
+              <figure class="gallery-slide"><div class="image-slot"><img src="assets/proposal/player/lookup.jpg" alt="Amis word definition shown within the player" width="720" height="1516"></div></figure>
+            </div>
+
+            <div class="gallery-controls" hidden><button type="button" data-direction="-1" aria-label="Previous player screenshot">←</button><button type="button" data-direction="1" aria-label="Next player screenshot">→</button></div>
+          </div>
+        </div>
+        <div class="disclosures">
+          <details><summary>Proposed first release</summary><div class="detail-content">
+            <p>A simple mobile player to enable learners to listen to authentic Amis with
+              convenient features to decipher the meaning and repeat interesting bits.
+              A desktop version would have to be designed.</p>
+            <p>80% release-ready. Work remains on the layout and UX, the settings/reading choices and the backend. Estimated 2 weeks for internal release.</p>
+          </div></details>
+          <details><summary>Possible relationships to 語浪</summary><div class="detail-content">
+            <ul>
+              <li>A useful unique independent tool linked from the 語浪 website.</li>
+              <li>Selected recordings listed on the 語浪 website, opening in the player.</li>
+              <li>Paving the way for future work on ILRDF content and clip-based tools.</li>
+            </ul>
+            <p>Direct monetization is deliberately exempt.
+              Shared login or deeper integration should serve a learner need.</p>
+          </div></details>
+          <details><summary>Questions for you</summary><div class="detail-content">
+            <p>Naming and choice of integration (separate PWA or part of 語浪).
+              Is a link enough initially, or would selected recordings on your website be useful?</p>
+          </div></details>
+        </div>
+      </article>
+    </section>
+
+    <section id="p2" class="chapter" aria-labelledby="p2-title">
+      <div class="chapter-heading">
+        <span class="phase-label p2">Phase 2 · New product ideas</span>
+        <h2 id="p2-title">Three ideas that break the mold</h2>
+        <p>We talked about offering new members intersting content to use right away.
+          We need solutions to bridge the gap between free 語浪 users
+          and dedicated learners who susbcribe to Skool for classes.
+          The typical learning material is text-based, well-structured but dull.
+          Some people create engaging content, but without enough learning support.
+          We can shine by offering
+          And since you've just developed a new tool for exam practice, it's time to bring out the fun!
+          Or at least provide content that will make leaners feel
+          "Finally something natural I can say to Ama/the restaurant owner/my friends" or
+          "Finally a resource that helps me understand what people say in the binglang shop!"
+          These three options explore variations on the rewarding experiences we can offer:
+          natural Amis, easy to digest and review, structured and integrated into 語浪.
+          The sweetspot will depend on the amount of effort we're willing to put into this.</p>
+      </div>
+      <div class="product-preview-grid" role="region" aria-label="New product images">
+        <a class="product-preview" href="#start-here" aria-label="Start Here"><img hidden data-src="assets/proposal/start-here.webp" alt="Start Here product concept" width="640" height="480"></a>
+        <a class="product-preview" href="#mission-packs" aria-label="Mission Packs"><img hidden data-src="assets/proposal/mission-packs.webp" alt="Mission Packs product concept" width="640" height="480"></a>
+        <a class="product-preview" href="#microdrama" aria-label="Amis Microdrama"><img hidden data-src="assets/proposal/microdrama.webp" alt="Amis Microdrama product concept" width="640" height="480"></a>
+      </div>
+      <div class="table-wrap" role="region" aria-label="Product comparison" tabindex="0">
+        <table class="compare">
+          <caption>These are propositions, the scope and order remains open!</caption>
+          <thead>
+            <tr>
+              <td></td>
+              <th scope="col"><span class="col-num">03</span><span class="col-name"><a href="#start-here">Start Here</a></span></th>
+              <th scope="col" class="mission pref"><span class="col-num">04</span><span class="col-name"><a href="#mission-packs">Mission Packs</a></span></th>
+              <th scope="col" class="drama"><span class="col-num">05</span><span class="col-name"><a href="#microdrama">Amis Microdrama</a></span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Learner outcome</th><td>A welcome, guidance, and a first useful Amis experience.</td><td class="pref">Prepare to speak in real situations.</td><td>Follow a story with learning help nearby.</td></tr>
+            <tr><th scope="row">Effort</th>
+              <td><span class="scale" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i><i></i></span>Small</td>
+              <td class="pref"><span class="scale" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>Medium</td>
+              <td><span class="scale" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>Large</td></tr>
+            <tr><th scope="row">Offer</th>
+              <td><span class="chip">Free</span></td>
+              <td class="pref"><span class="chip">Paid</span><span class="sub">Free extract, cheap packs.</span></td>
+              <td><span class="chip">Paid</span><span class="sub">Free samples then subscription</span></td></tr>
+            <tr><th scope="row">Home</th><td>Skool</td><td class="pref">Sashawaves.com</td><td>Sashawaves.com</td></tr>
+            <tr><th scope="row">Revenue role</th><td>Indirect: help newcomers start learning and continue.</td><td class="pref">Direct sales & potential repeat purchases.</td><td>Model to decide, conflicts with Skool subscription.</td></tr>
+            <tr><th scope="row">Main dependency</th><td>Fresh audio/content and a clear newcomer goal.</td><td class="pref">Natural clips, teacher audio, and speaker coordination.</td><td>Writing, performers, and filming/editing capacity.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <article id="start-here" class="product" aria-labelledby="start-title">
+        <div class="product-top">
+          <span class="product-number">03</span>
+          <div>
+            <h3 id="start-title">Start Here</h3>
+            <div class="tags">
+              <span class="chip">Free</span>
+              <span class="chip outline">Small effort</span>
+              <span class="chip outline">Skool</span></div></div></div>
+        <div class="product-grid">
+          <div class="product-main">
+            <p class="product-lead">Give a newcomer a useful Amis win in 5–10 minutes
+              after discovering 語浪/Skool, then offer one clear next step.</p>
+            <p>A compact experience for people arriving from Insta:
+              a few short 2-3 min videos where Osay welcomes them personally and
+              shares what she loves about the language.
+              Listen & understand. Hear & respond. Notice the intriguing particularities of the language.
+              An entertaining intro with valuable Amis content before navigating a larger platform.</p>
+            <dl class="facts"><div><dt>Why try it</dt><dd>Turn social-media curiosity into actual learning. The smallest of these three experiments can help us understand what newcomers find useful.</dd></div><div><dt>Main challenge</dt><dd>It still needs fresh content and recording, despite being free. The learner goal and next action must be precise.</dd></div></dl>
+
+          </div>
+          <figure>
+            <div class="image-slot"><img hidden data-src="assets/proposal/start-here.webp" alt="Illustration of the Start Here newcomer learning experience" width="640" height="480"></div>
+          </figure>
+        </div>
+        <div class="disclosures">
+          <details><summary>What a small pilot could contain</summary>
+            <div class="detail-content">
+              <ul>
+              <li>Two 3-5 minute video where you share core expressions and cultural anecdotes.
+                Perhaps about your village and family, so that 都原 can relate.
+                Can recycle and expand on insta content.
+              </li>
+              <li>Add teacher/native audio for all dialects (when different).</li>
+              <li>Partly story-telling, with a few listen, recognize and respond interactions.
+                The value is delivered with financial friction.</li>
+              <li>The next step: guide the user to their next destinations according to their needs.</li>
+              </ul>
+            </div>
+          </details>
+          <details><summary>Questions to decide together</summary><div class="detail-content"><ul>
+            <li>Who is the first target newcomer?
+              Perhaps the people who relate to your experience and want to renew ties with the Amis culture.</li>
+            <li>Should the next step lead to a class, community, paid product, another learning experience?</li>
+            <li>Should this content be made available before account creation?</li>
+          </ul></div></details>
+          <details><summary>Possible evolutions</summary>
+            <div class="detail-content">
+              <p>This is mostly standalone and a stepping stone.</p></div></details>
+          <details><summary>What would tell us to scale, revise, or stop?</summary>
+            <div class="detail-content">
+              <ul>
+                <li>Watch starts, completion/time, next-step clicks, short-term return.</li>
+                <li>A brief usefulness question, alongside production hours and maintenance effort.</li>
+              </ul>
+            </div>
+            <div class="pilot-signals">
+              <div>
+                <h4>Scale</h4><p>None planned.</p>
+              </div>
+                <div>
+                  <h4>Revise</h4>
+                  <p>People start but drop out or miss the next step.
+                    Simplify or change the learner promise.</p>
+                </div>
+                <div>
+                  <h4>Stop / pause</h4>
+                  <p>Repeated small revisions still produce little useful continuation relative to the work required.</p>
+                </div></div>  <details class="working-split"><summary>Provisional working split</summary>
+            <div class="detail-content"><div class="split">
+                <div><strong>Ben</strong>Learning flow, coding, learner experience, and measurement.</div>
+                <div><strong>Osay</strong>Learner promise, language validation, recording coordination, and promotion.</div>
+                <div><strong>Both</strong>Situation, utterances, next step, and feedback.</div>
+                <div><strong>TBD</strong>Content writing and editing.</div>
+            </div></div>
+          </details>
+        </div></details>
+        </div>
+      </article>
+
+      <article id="mission-packs" class="product mission" aria-labelledby="mission-title">
+        <div class="product-top">
+          <span class="product-number">04</span>
+          <div>
+            <h3 id="mission-title">Mission Packs</h3>
+            <div class="tags">
+              <span class="chip">Paid</span>
+              <span class="chip outline">Medium effort</span>
+              <span class="chip outline">Sashawaves.com</span></div></div></div>
+        <div class="product-grid">
+          <div class="product-main">
+            <p class="product-lead">Prepare for real Amis situations with natural clips,
+              careful teacher audio, and structured practice.</p>
+            <p>A pack contains short videos clips of native speakers saying day to day sentences (think Speak app).
+              About 50 clips around a situation (buying 'icep, learning to fish, listening to a story,
+              or simply introducing yourself).
+              The sentences are authentic but simple, they comewith translations and concise usage help.
+              Features to drill them (e.g. cloze, rapid-fire Q&A) helps the learner understand
+              what they might hear and practice what they could say.
+              Very valuable for speaking/listening, the core of many learners' goals.
+              , </p>
+            <dl class="facts">
+              <div>
+                <dt>Why try it</dt>
+                <dd>A low-commitment paid step between free tools and longer classes or membership.
+                  Audio and language assets can support future products. Straightforward scaling.
+                  Potentially an awesome way to help Amis people advertize their livelihood
+                  (think Sawtoy, restaurant owners, musicians, wood carvers, etc)</dd>
+              </div>
+              <div>
+                  <dt>Main challenge</dt>
+                  <dd>Find interested peakers and select natural language that is teachable, useful,
+                    and consistent enough for a focused pack.</dd>
+              </div>
+            </dl>
+            <div class="example"><strong>One possible learner moment</strong>
+              Before visiting someone in the buluo, a learner practices an introduction,
+              hears how different speakers might answer, and rehearses a short exchange.</div>
+
+          </div>
+          <figure>
+            <div class="image-slot"><img hidden data-src="assets/proposal/mission-packs.webp" alt="Illustration of situation-based Amis speaking and listening practice" width="640" height="480"></div>
+          </figure>
+        </div>
+        <div class="disclosures">
+          <details>
+            <summary>What a first pack could contain</summary>
+            <div class="detail-content">
+              <ul>
+                <li>One clear situation and outcome.
+                  50 core sentences for a substantial pack as a working concept, adjustable after prototyping.</li>
+                <li>Teacher-verified language, selected native clips, slow recordings, translations
+                  and brief grammar/usage help.</li>
+                <li>1-3 drill types, with quick natural answers and fuller practice variants where useful.</li>
+                <li>Easy access on phones.</li>
+                <li>Optional sharing on social media.</li>
+                <li>Small community challenges: points for speaking and recording others.</li>
+                <li>The core product does not depend on AI.</li>
+              </ul></div></details>
+          <details>
+            <summary>Questions to decide together</summary>
+            <div class="detail-content">
+              <ul>
+                <li>Which situation makes the clearest useful paid promise?
+                  Self-intro, buying groceries, chatting with Ama, ...?</li>
+                <li>How to avoid conflict with Rekad content?
+                  Providemore depth, breadth and tools. Rekad are a good complement.</li>
+                <li>How many natural clips are enough, and which drills offer the most value?</li>
+                <li>How to find reliable speakers willing to cooperate? People who need advertizing.</li>
+                <li>How to solve the dialect issue? Create packs for Southern/Coastal Amis first.</li>
+                <li>How would someone buy and access a pack through the website/Skool?</li>
+                <li>What price and production workload would make a first pack worthwhile?</li>
+              </ul></div></details>
+          <details>
+            <summary>Possible evolutions</summary>
+            <div class="detail-content">
+              <ul>
+                <li>Later packs could turn into skill & culture leanrning.
+                  Centered on a person, craft, place, or business.</li>
+                <li>Branching choices, role-play, register variants</li>
+                <li>Mission completion could become interaction upgrades within packs.</li>
+                <li>Add deeper review or bounded AI help where it serves the learning experience.</li>
+              </ul>
+            </div></details>
+          <details>
+            <summary>What would tell us to scale, revise, or stop?</summary>
+            <div class="detail-content">
+              <p>Track purchase, starts/completion, drills/replay, return use,
+                confidence/usefulness feedback, and interest in another pack.
+                Compare revenue with content and engineering hours, ongoing support,
+                and any conversion into classes/community.</p>
+              <div class="pilot-signals">
+                <div>
+                  <h4>Scale</h4>
+                  <p>People buy, use the pack, report useful practice, and want another.</p></div>
+                <div>
+                  <h4>Revise</h4>
+                  <p>Purchase interest and actual use diverge.
+                    Adjust the promise, content balance, drills, access, or price.</p>
+                </div>
+                <div>
+                  <h4>Stop / pause</h4>
+                  <p>Demand or learner value remains weak after a bounded revision,
+                    or each pack costs too much to sustain.</p>
+                </div>
+              </div>
+            </div></details>
+          <details class="working-split"><summary>Provisional working split</summary>
+            <div class="detail-content"><div class="split">
+                <div><strong>Ben</strong>
+                  Product, coding, drills, learner experience, measurement, and reusable packaging.</div>
+                <div><strong>Osay</strong>
+                  Language validation, teacher audio, speaker coordination, and launch/promotion.</div>
+                <div><strong>Both</strong>
+                  Topic, utterances, clips, editing priorities, and feedback.</div>
+                  <div><strong>TBD</strong>
+                  Writing and clip production, finding the speakers.</div>
+              </div></div>
+          </details>
+        </div>
+      </article>
+
+      <article id="microdrama" class="product drama" aria-labelledby="drama-title">
+        <div class="product-top">
+          <span class="product-number">05</span>
+          <div>
+            <h3 id="drama-title">Amis Microdrama</h3>
+            <div class="tags">
+              <span class="chip">Paid (subscription)</span>
+              <span class="chip outline">Large effort</span>
+              <span class="chip outline">Sashawaves.com</span>
+            </div></div></div>
+        <div class="product-grid">
+          <div class="product-main">
+            <p class="product-lead">Amis Netflix.
+              Follow humoristic short drama with learning help.</p>
+            <p>Modern situations, recurring characters, and natural Amis in 30–60 second episodes.
+              The story brings people back.
+              Subtitles, lookup, and replay help them understand and practice.</p>
+            <dl class="facts">
+              <div>
+                <dt>Why try it</dt>
+                <dd>An entertaining format that can travel through social media and
+                  showcase storytellers and performers.
+                  Unique content, great learning value, branding boost.
+                  The content can support other learning formats.
+                </dd>
+              </div>
+              <div>
+                <dt>Main challenge</dt>
+                <dd>Good dialogue, performers, pacing, and production coordination.
+                  Writing and filming/editing may dominate the cost.</dd>
+              </div></dl>
+            <div class="example"><strong>One possible learner moment</strong>
+              A learner watches a one-minute buluo comedy scene, checks an unfamiliar line,
+              learns a new expression, replays it,
+              then opens the next episode to find out what happens.
+              They rewatch the content are start using the lines in real life.</div>
+
+          </div>
+          <figure>
+            <div class="image-slot">
+              <img hidden data-src="assets/proposal/microdrama.webp" alt="Illustration of short serialized Amis stories with learning support" width="640" height="480"></div>
+          </figure>
+        </div>
+        <div class="disclosures">
+          <details>
+            <summary>What a small pilot could contain</summary>
+            <div class="detail-content">
+              <ul>
+                <li>One storyline and a small recurring cast, 6–10 episodes of 30–60 seconds.</li>
+                <li>Vertical video suited to phones, natural language and reliable subtitles/translations.</li>
+                <li>Light production that gives the story and language a fair test.</li>
+                <li>Minimal learning support: lookup and replay, with shadowing or bookmarking.</li>
+                <li>A free sample followed by a paid season or subscription test.</li>
+              </ul>
+            </div></details>
+          <details>
+            <summary>Questions to decide together</summary>
+            <div class="detail-content"><ul>
+              <li>Who is the audience, and which genre would they keep watching?</li>
+              <li>Who can write and perform dialogue that is natural and entertaining?</li>
+              <li>What is the smallest season that still tests continuation and anticipation?</li>
+              <li>Which language variety, learning tools, and free-to-paid boundary fit?</li>
+              <li>Who can film/edit, and what production workload is realistic?</li>
+            </ul>
+          </div></details>
+          <details>
+            <summary>Possible evolutions</summary>
+            <div class="detail-content">
+              <p>Discussion around the plot, shadowing sahring or reenactment,
+                and Mission Packs built around scenes could follow.
+                Longer seasons and richer tools depending on what the small pilot teaches us.</p></div></details>
+          <details>
+            <summary>What would tell us to scale, revise, or stop?</summary>
+            <div class="detail-content">
+              <p>Watch episode completion, continuation from episode 1 through the season,
+                repeat viewing, free-to-paid conversion, and “would you watch another season?” feedback.
+                Compare production hours/cost per completed viewer and payer, plus platform maintenance.</p>
+            <div class="pilot-signals">
+              <div>
+                <h4>Scale</h4>
+                <p>Viewers keep watching, want another season,
+                  and some pay at a production cost we can repeat.</p></div>
+              <div>
+                <h4>Revise</h4>
+                <p>The first episode attracts interest but continuation drops.
+                  Rework the story, pacing, language support, or paid boundary.</p></div>
+              <div>
+                <h4>Stop / pause</h4>
+                <p>The small season does not sustain viewing or paid interest,
+                  or production demands outweigh the result.</p>
+              </div>
+            </div>
+          </div>
+        </details>
+          <details class="working-split"><summary>Provisional working split</summary>
+            <div class="detail-content"><div class="split">
+                <div><strong>Ben</strong>
+                  Playback and study experience, subtitles and lookup, implementation and measurement.</div>
+                <div><strong>Osay</strong>
+                  Speaker/cast relationships, language review, recording coordination and promotion.</div>
+                <div><strong>Both</strong>
+                  Format, editorial direction, pilot scope, learning support, and feedback.</div>
+                <div><strong>TBD</strong>Writing, directing, filming, and editing.</div>
+              </div></div>
+          </details>
+        </div>
+      </article>
+    </section>
+
+    <section id="p3" class="chapter" aria-labelledby="p3-title">
+      <div class="chapter-heading">
+        <span class="phase-label p3">Phase 3 · Later ideas</span>
+        <h2 id="p3-title">Possible ideas for later</h2>
+        <p>Some possibilities, thatI'll keep track of, not a complete list.
+          They depend on the direction of 語浪 and its website,
+          what we learn from the tools and first new products,
+          available content and production capacity, and user behavior and revenue.
+          No decision needed now.</p>
+      </div>
+      <div class="later-grid">
+        <div>
+          <h3>Graded video library</h3><p>Interesting Amis input organized by learner level.
+            Playful and relax content. Can be story-telling, games/enigmas or just talking about popular movies with
+            live drawing for comprehesible input.
+          </p></div>
+        <div>
+          <h3>Pattern &amp; listening practice</h3>
+          <p>Useful mechanics drawn from the existing exam tool.
+            Some modeules can be valuable outside of the exam study.
+          </p></div>
+        <div>
+          <h3>Beginner curriculum</h3>
+          <p>A coherent path built on mature, reusable lesson content.</p></div>
+        <div>
+          <h3>Progressive audio course</h3>
+          <p>Audio-first learning with manageable increments and repetition.
+            Can be listened on the audio even by people who are not interested in reading.
+          </p></div>
+      </div>
+      <p class="other-directions">Other possibilities: human feedback/correction, richer review,
+        selective AI features, and community extensions.</p>
+    </section>
+
+    <section id="discussion" class="chapter" aria-labelledby="discussion-title">
+      <div class="chapter-heading">
+        <span class="phase-label discuss">Next steps</span>
+        <h2 id="discussion-title">What I’d like to discuss</h2>
+        <p>.</p>
+      </div>
+      <div class="discussion-grid">
+        <div class="discussion-item"><span class="discussion-number">1</span><div>
+          <h3>Introducing the existing tools</h3>
+          <p>What should the extension be called?
+            Does it fit as the first collab product to be pushed?</p></div></div>
+        <div class="discussion-item"><span class="discussion-number">2</span><div>
+          <h3>Which new ideas interest you?</h3>
+          <p>Among the 3 propositions: which to pursue, set aside, or discuss?
+            If several appeal, which deserves the first focused conversation?</p></div></div>
+        <div class="discussion-item"><span class="discussion-number">3</span><div>
+          <h3>Where should the products live?</h3>
+          <p>Which experiences belong on the 語浪 website, in the Skool community,
+            or on a separate page?</p></div></div>
+        <div class="discussion-item"><span class="discussion-number">4</span><div>
+          <h3>Practical production capacity</h3>
+          <p>Who can validate language, record, coordinate speakers, write, or film/edit?
+            What amount of work feels realistic for one small pilot?</p></div></div>
+      </div>
+    </section>
+  </main>
+  <footer class="wrap"><span>語浪 × Ben · Dev direction &amp; products proposal</span><a href="#overview">Back to overview ↑</a></footer>
+  <script>
+    // Optional enhancements; all proposal content and navigation work without JavaScript.
+    const sectionLinks = [...document.querySelectorAll('.nav-links a')];
+    const nav = document.querySelector('.navigation');
+    const progress = document.querySelector('.nav-progress');
+    const syncNavHeight = () => document.documentElement.style.setProperty('--nav-height', `${nav.offsetHeight}px`);
+    syncNavHeight();
+    window.addEventListener('resize', syncNavHeight);
+    const trackedSections = sectionLinks.map(link => document.querySelector(link.getAttribute('href')));
+    const setActiveSection = href => sectionLinks.forEach(link => {
+      if (link.getAttribute('href') === href) {
+        link.setAttribute('aria-current', 'location');
+        const strip = link.parentElement;
+        const l = link.offsetLeft, r = l + link.offsetWidth;
+        if (l < strip.scrollLeft || r > strip.scrollLeft + strip.clientWidth) strip.scrollTo({ left: l - 12 });
+      } else link.removeAttribute('aria-current');
+    });
+    let scrollQueued = false;
+    const onScroll = () => {
+      let active = trackedSections[0];
+      trackedSections.forEach(section => {
+        if (section.getBoundingClientRect().top <= nav.offsetHeight + 60) active = section;
+      });
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) active = trackedSections[trackedSections.length - 1];
+      setActiveSection(`#${active.id}`);
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`;
+      nav.classList.toggle('is-stuck', nav.getBoundingClientRect().top <= 0 && window.scrollY > 0);
+      scrollQueued = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (scrollQueued) return;
+      scrollQueued = true;
+      requestAnimationFrame(onScroll);
+    }, { passive: true });
+    onScroll();
+    sectionLinks.forEach(link => link.addEventListener('click', () => {
+      requestAnimationFrame(() => requestAnimationFrame(() => setActiveSection(link.getAttribute('href'))));
+    }));
+    document.querySelectorAll('.image-gallery').forEach(gallery => {
+      const track = gallery.querySelector('.gallery-track');
+      const slides = [...track.querySelectorAll('.gallery-slide')];
+      const controls = gallery.querySelector('.gallery-controls');
+      const previous = controls.querySelector('[data-direction="-1"]');
+      const next = controls.querySelector('[data-direction="1"]');
+      let current = 0;
+      const showSlide = index => {
+        current = Math.min(slides.length - 1, Math.max(0, index));
+        slides.forEach((slide, i) => { slide.hidden = i !== current; });
+        previous.disabled = current === 0;
+        next.disabled = current === slides.length - 1;
+      };
+      previous.addEventListener('click', () => showSlide(current - 1));
+      next.addEventListener('click', () => showSlide(current + 1));
+      track.addEventListener('keydown', event => {
+        const targets = { ArrowLeft: current - 1, ArrowRight: current + 1, Home: 0, End: slides.length - 1 };
+        if (!(event.key in targets)) return;
+        event.preventDefault();
+        showSlide(targets[event.key]);
+      });
+      controls.hidden = slides.length < 2;
+      showSlide(0);
+    });
+    document.querySelectorAll('img[data-src]').forEach(img => {
+      img.addEventListener('load', () => { img.hidden = false; });
+      img.addEventListener('error', () => { img.hidden = true; });
+      img.src = img.dataset.src;
+    });
+    let printState = [];
+    window.addEventListener('beforeprint', () => {
+      if (printState.length) return;
+      printState = [...document.querySelectorAll('details')].map(detail => [detail, detail.open]);
+      printState.forEach(([detail]) => { detail.open = true; });
+    });
+    window.addEventListener('afterprint', () => {
+      printState.forEach(([detail, wasOpen]) => { detail.open = wasOpen; });
+      printState = [];
+    });
+  </script>
+</body>
+</html>
