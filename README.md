@@ -5,7 +5,7 @@ Treat every file here as public. Keep drafts and internal notes outside this fol
 
 ## Published proposal
 
-- `sashawaves-proposal.html`: partner-facing proposal.
+- `sashawaves-proposal-261005.html`: partner-facing proposal.
 - `assets/proposal/`: screenshots used by the proposal.
 - `index.html`: opens the proposal from the website root.
 - `.nojekyll`: serves these files directly through GitHub Pages.
