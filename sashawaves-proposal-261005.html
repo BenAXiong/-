@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="description" content="Existing Amis reading and listening tools, three ideas for new learning products, and how they could fit with 語浪 SASHAWAVES.">
   <link rel="icon" href="data:,">
-  <title>語浪 x Ben - dev direction & products proposal</title>
+  <title>Dev direction &amp; products proposal</title>
   <style>
     :root {
       --paper: #f7f5ef;
@@ -71,7 +71,7 @@
     .navigation { position: sticky; top: 0; z-index: 20; background: rgba(247, 245, 239, .94); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-block: 1px solid var(--line); }
     .nav-progress { position: absolute; left: 0; top: -1px; height: 2px; width: 100%; background: var(--green); transform-origin: 0 50%; transform: scaleX(0); }
     .nav-inner { display: flex; align-items: stretch; justify-content: space-between; gap: 24px; }
-    .nav-links { display: flex; overflow-x: auto; scrollbar-width: none; margin-left: -14px; }
+    .nav-links { min-width: 0; flex: 1; display: flex; overflow-x: auto; scrollbar-width: none; margin-left: -14px; }
     .nav-links::-webkit-scrollbar { display: none; }
     .nav-links a { --tone: var(--green); position: relative; flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center; gap: 1px; min-height: 60px; padding: 10px 14px 11px; color: var(--muted); text-decoration: none; font-size: 14px; line-height: 1.25; white-space: nowrap; transition: color .15s; }
     .nav-links a small { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; transition: color .15s; }
@@ -84,8 +84,14 @@
     .nav-links .t-p1 { --tone: var(--blue); }
     .nav-links .t-p2 { --tone: var(--rust); }
     .nav-links .t-p3 { --tone: var(--stone); }
-    .nav-title { flex: 0 0 auto; display: flex; align-items: center; font-family: var(--serif); font-size: 15px; color: var(--muted); opacity: 0; transform: translateY(3px); transition: opacity .2s, transform .2s; pointer-events: none; }
-    .navigation.is-stuck .nav-title { opacity: 1; transform: none; }
+
+    .language-toggle { flex: 0 0 auto; display: flex; align-items: center; gap: 4px; }
+    .language-toggle button { padding: 6px 9px; border: 1px solid transparent; background: transparent; color: var(--muted); font: inherit; font-size: 12px; line-height: 1.4; cursor: pointer; }
+    .language-toggle button[aria-pressed="true"] { border-color: var(--line); background: var(--panel); color: var(--ink); }
+    .language-toggle button:hover { color: var(--green); }
+    html[lang="zh-Hant"] { --sans: "Microsoft JhengHei", "PingFang TC", "Segoe UI", sans-serif; --serif: "Noto Serif TC", "PMingLiU", Georgia, serif; }
+    html[lang="zh-Hant"] h1, html[lang="zh-Hant"] h2 { line-height: 1.3; letter-spacing: 0; }
+    html[lang="zh-Hant"] .masthead, html[lang="zh-Hant"] .brand, html[lang="zh-Hant"] .phase-label, html[lang="zh-Hant"] .phase-kicker, html[lang="zh-Hant"] .phase-discuss span, html[lang="zh-Hant"] .product-main h4, html[lang="zh-Hant"] .example strong, html[lang="zh-Hant"] .pilot-signals h4 { letter-spacing: .04em; }
 
     main { padding-bottom: 56px; }
     main, section[id], article[id] { scroll-margin-top: calc(var(--nav-height) + 20px); }
@@ -241,7 +247,7 @@
     footer a { text-decoration: none; font-weight: 650; }
 
     @media (max-width: 980px) {
-      .nav-title { display: none; }
+      .nav-inner { gap: 12px; }
       .later-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 900px) {
@@ -366,7 +372,10 @@
         <a href="#p3" class="t-p3"><small>Phase 3</small>Later ideas</a>
         <a href="#discussion"><small>Next steps</small>Discussion</a>
       </div>
-      <span class="nav-title" aria-hidden="true">語浪 × Ben</span>
+      <div class="language-toggle" role="group" aria-label="Choose language">
+        <button type="button" data-language="en" lang="en" aria-pressed="true">English</button>
+        <button type="button" data-language="zh-Hant" lang="zh-Hant" aria-pressed="false">中文</button>
+      </div>
     </div>
   </nav>
 
@@ -621,7 +630,7 @@
               </li>
               <li>Add teacher/native audio for all dialects (when different).</li>
               <li>Partly story-telling, with a few listen, recognize and respond interactions.
-                The value is delivered with financial friction.</li>
+                The value is delivered without financial friction.</li>
               <li>The next step: guide the user to their next destinations according to their needs.</li>
               </ul>
             </div>
@@ -957,7 +966,266 @@
       </div>
     </section>
   </main>
-  <footer class="wrap"><span>語浪 × Ben · Dev direction &amp; products proposal</span><a href="#overview">Back to overview ↑</a></footer>
+  <footer class="wrap"><span>Dev direction &amp; products proposal</span><a href="#overview">Back to overview ↑</a></footer>
+  <!-- English HTML remains the editable source. Chinese translation keys match its text, with whitespace normalized. -->
+  <script id="proposal-translations" type="application/json">
+{
+  "Skip to proposal": "跳到提案內容",
+  "Dev direction & products proposal": "開發方向與產品提案",
+  "Let's decide what comes next!": "一起決定接下來做什麼！",
+  "Read Phase 1 to know more about the tools I've already developed and which could be quick and valuable additions to Sashawaves. Phase 2 is the exciting new stuff, I hope some of them will be a good fit.": "第一階段介紹我已經開發的工具，可以先看看哪些能很快為語浪帶來實際價值。第二階段則是比較令人期待的新點子，希望其中有適合我們的方向。",
+  "Overview": "總覽",
+  "How it fits together": "整體思路",
+  "Phase 1": "第一階段",
+  "Existing tools": "現有工具",
+  "Phase 2": "第二階段",
+  "New product ideas": "新產品構想",
+  "Phase 3": "第三階段",
+  "Later ideas": "未來方向",
+  "Next steps": "下一步",
+  "Discussion": "一起討論",
+  "How the pieces fit together": "這些想法之間的關係",
+  "The big question is what new learning products would be worth making and be viable. I’ve outlined three ideas in Phase 2 below. Since you just developed an exam-prep product, I thought we could focus the next phase on products that are fun, useful and also structured. Each combines content people might enjoy with guidance that helps them understand and use the language. They would need new content, recordings, or production work, so I’d like us to compare them before committing to that work.": "最重要的問題是：哪些新的學習產品值得做，而且做得下去？我在下面的第二階段提出三個想法。你剛做了一個考試練習產品，所以我想，下一階段可以著重在有趣、實用，也有學習架構的產品。每個想法都把吸引人的內容和學習輔助結合起來，幫助使用者理解、運用阿美語。不過，這些都需要新的內容、錄音或製作工作，所以在投入之前，我想先和你比較這幾個方向。",
+  "As I've told you, I also have on my hands two tools that could interest you and learners. The first is a powerful extension to analyze Amis words on any web page and instantly display definitions, morphology and example sentences. The second is a player for the ILRDF videos with basic features. I'd love to see people get value from them. They're both nearly ready to publish so I believe this is a manageable first step: we can release something useful and see how we work together while discussing Phase 2.": "像之前和你提過的，我手上也有兩個工具，你和學習者可能會感興趣。一個是瀏覽器擴充功能，能分析任何網頁上的阿美語詞彙，立即顯示詞義、構詞資訊和例句；另一個是播放原住民族語言研究發展基金會（原語會）影片的播放器，已具備基本功能。我很希望這些工具能真正幫到人。兩個都快能發布了，所以我覺得這是個比較容易開始的第一步：先推出有用的東西，看看我們怎麼合作，同時討論第二階段的方向。",
+  "Now": "現在",
+  "Release existing tools": "先推出現有工具",
+  "Webpage reading extension": "網頁閱讀擴充功能",
+  "Ready for you to test this week": "這週就可以讓你試用",
+  "Amis listening player": "阿美語聆聽播放器",
+  "80% ready · needs UI/UX polish": "完成約 80%・介面與操作還需調整",
+  "To discuss": "想討論的事",
+  "How to introduce them": "如何介紹、推出這兩個工具",
+  "Next": "接下來",
+  "Choose a new product to explore": "選一個新產品方向來探索",
+  "Start Here": "入門體驗",
+  "A free first lesson.": "免費的第一堂體驗課。",
+  "Mission Packs": "情境練習包",
+  "Paid situational speaking practice for authentic Amis.": "付費的情境口說練習，學習自然的阿美語。",
+  "Amis Microdrama": "阿美語短劇",
+  "Short stories with learning help. (Amis Netflix!)": "有學習輔助的短篇故事。（阿美語版 Netflix！）",
+  "The best value first product and its features.": "先做哪個產品最值得，以及要有哪些功能。",
+  "Later": "之後",
+  "Keep longer-term ideas in view": "保留較長期的想法",
+  "A curriculum, graded videos, or an audio course could follow, depending on the earlier results and available content.": "之後可以考慮完整課程、分級影片或音訊課程，取決於前面的成果和可用內容。",
+  "Nothing for now.": "目前先不用討論。",
+  "Phase 1 · Existing tools": "第一階段・現有工具",
+  "Works ready for release": "準備推出的作品",
+  "Amis browser extension": "阿美語瀏覽器擴充功能",
+  "Free": "免費",
+  "Chrome desktop": "電腦版 Chrome",
+  "Ready to test this week": "這週可試用",
+  "Look up Amis while reading a webpage, explore meanings and examples, and keep useful material for later.": "讀網頁時直接查阿美語，查看詞義和例句，也能把有用的內容存下來。",
+  "Existing learner experience": "目前可以怎麼用",
+  "Hover or select an Amis word or sentence on a webpage to look it up.": "將游標停在網頁上的阿美語單字，或選取單字、句子，就能查詢。",
+  "Root and affix information displayed automatically.": "自動顯示詞根與詞綴資訊。",
+  "Compare definitions and examples across seven sources.": "比較七種資料來源的解釋和例句。",
+  "Explore a sentence in the side panel.": "在側邊面板中逐詞探索句子。",
+  "Listen to source audio, copy sentences, save words or examples for review.": "聽資料來源提供的錄音、複製句子，或儲存單字和例句供之後複習。",
+  "Proposed first release": "第一版的範圍",
+  "A free, Amis-only Chrome desktop extension built around lookup → examples/listening → sentence reading → saved review.": "免費、專門查阿美語的電腦版 Chrome 擴充功能。主要使用流程是：查詞 → 看例句／聽錄音 → 讀句子 → 儲存、複習。",
+  "After reworking the side panel, menus UI, onboarding, and final identity, the extension will be ready for testing and store update (already submitted).": "側邊面板、選單介面、新手引導和正式名稱、視覺設計調整好之後，就可以測試並更新商店版本（已經送審）。",
+  "The tool will be linked for sending feedback to 語浪. Feedback can be used to shape subsequent releases.": "工具中會放上向語浪回報意見的連結，收到的回饋可以用來規劃後續版本。",
+  "Mobile reach matters for your audience, so a quick mobile version route is worth testing. A desktop app would also enable looking up words in other apps (e.g. Line).": "你的受眾很常用手機，所以值得試試能否快速做出手機版。若做成電腦應用程式，也可以查其他應用程式中的文字，例如 LINE。",
+  "Relationship to 語浪 & revenue": "與語浪的關係及收入",
+  "The working version already uses 語浪’s attribution and visual assets. It currently has a temporary name, Tapelik, so we’d choose its public name before publishing. We can also decide whether it carries 語浪’s brand, a shared identity, or an independent name.": "目前版本已經標示語浪，並使用語浪的視覺素材。Tapelik 只是暫名，發布前需要決定正式名稱。也可以一起討論要使用語浪的品牌、共同品牌，還是獨立名稱。",
+  "Saving material directly to the user's 語浪 account would be a great addition.": "如果能把學習內容直接存進使用者的語浪帳號，會是很好的功能。",
+  "Potential paid feature: integrate 語浪's AI for translation and grammar help. Dictionary content is licensed for non-commercial use, so the paid boundary needs review before launch.": "可能的付費功能：串接語浪的 AI，提供翻譯和文法解說。不過，辭典內容的授權限於非商業用途，推出前需要確認哪些功能適合收費。",
+  "Choices to discuss": "需要一起決定的事",
+  "The public name, first-release features, quiet pilot versus broader launch, and which links to the 語浪 website would be useful.": "正式名稱、第一版的功能、先小範圍試用還是直接公開推出，以及哪些與語浪網站的連結最有幫助。",
+  "Amis player": "阿美語播放器",
+  "Integration tbd": "整合方式待定",
+  "80% ready": "完成約 80%",
+  "Listen to ILRDF Amis recordings with bilingual text and tools for understanding and repeated practice.": "搭配阿美語／中文文字聆聽原語會的阿美語錄音，透過查詞與重複播放來理解、練習。",
+  "Browse 187 recordings with Amis/Chinese transcripts.": "瀏覽 187 段附有阿美語／中文逐字稿的錄音。",
+  "Sort by language variety or title/text search.": "依語別篩選，或搜尋標題、逐字稿內容。",
+  "Follow synchronized subtitles and word highlighting.": "跟著同步字幕和逐詞標示聆聽。",
+  "Repeat a sentence or pause automatically.": "重複播放一句，或在句子結束後自動暫停。",
+  "Tap words for offline lookup, get instant definitions even with non-standard spelling.": "點選單字就能離線查詞；即使拼法不標準，也能立即看到解釋。",
+  "Hide a subtitle language, and pick up from a remembered position.": "隱藏其中一種語言的字幕，也能從上次播放的位置繼續。",
+  "Favorite recordings and download audio for offline practice (optional video available online).": "收藏錄音、下載音檔供離線練習；連線時也可以看影片。",
+  "A simple mobile player to enable learners to listen to authentic Amis with convenient features to decipher the meaning and repeat interesting bits. A desktop version would have to be designed.": "一個簡單的手機播放器，讓學習者聽到自然的阿美語，並方便查意思、反覆聽感興趣的片段。電腦版則還需要另外設計。",
+  "80% release-ready. Work remains on the layout and UX, the settings/reading choices and the backend. Estimated 2 weeks for internal release.": "距離發布約完成了 80%。還需要調整版面與操作體驗、設定和閱讀選項，以及後端。預計兩週後可供內部使用。",
+  "Possible relationships to 語浪": "可以如何搭配語浪",
+  "A useful unique independent tool linked from the 語浪 website.": "作為有特色、實用的獨立工具，由語浪網站提供連結。",
+  "Selected recordings listed on the 語浪 website, opening in the player.": "在語浪網站列出精選錄音，點選後開啟播放器。",
+  "Paving the way for future work on ILRDF content and clip-based tools.": "為之後運用原語會內容、開發以影音片段為主的工具打下基礎。",
+  "Direct monetization is deliberately exempt. Shared login or deeper integration should serve a learner need.": "這個工具刻意不直接收費。共用登入或更深入的整合，應該是為了解決學習者的實際需求。",
+  "Questions for you": "想問你的事",
+  "Naming and choice of integration (separate PWA or part of 語浪). Is a link enough initially, or would selected recordings on your website be useful?": "名稱，以及要獨立做成 PWA，還是整合進語浪。一開始只提供連結就夠了嗎？還是在你的網站上放精選錄音會更有用？",
+  "Phase 2 · New product ideas": "第二階段・新產品構想",
+  "Three ideas that break the mold": "三個跳脫既有形式的想法",
+  "We talked about offering new members intersting content to use right away. We need solutions to bridge the gap between free 語浪 users and dedicated learners who susbcribe to Skool for classes. The typical learning material is text-based, well-structured but dull. Some people create engaging content, but without enough learning support. We can shine by offering And since you've just developed a new tool for exam practice, it's time to bring out the fun! Or at least provide content that will make leaners feel \"Finally something natural I can say to Ama/the restaurant owner/my friends\" or \"Finally a resource that helps me understand what people say in the binglang shop!\" These three options explore variations on the rewarding experiences we can offer: natural Amis, easy to digest and review, structured and integrated into 語浪. The sweetspot will depend on the amount of effort we're willing to put into this.": "我們聊過，要讓新加入的人馬上有有趣的內容可以用。我們需要在免費使用語浪的人，以及願意訂閱 Skool 上課的認真學習者之間，提供更容易跨出的下一步。常見的教材以文字為主，有架構，但比較無聊；也有人做很吸引人的內容，卻缺少足夠的學習輔助。這正是我們可以發揮的地方。既然你剛做了新的考試練習工具，接下來就來做點好玩的吧！至少讓學習者覺得：「終於有自然的阿美語，可以拿來跟阿嬤、餐廳老闆或朋友說了！」或是「終於有資源，能幫我聽懂檳榔攤的人在說什麼！」下面三個方向，是我們可以提供的不同學習體驗：自然的阿美語、容易理解和複習、有學習架構，也能和語浪整合。哪種做法最適合，還是要看我們願意投入多少心力。",
+  "These are propositions, the scope and order remains open!": "這些都只是提議，範圍和先後順序還可以一起討論！",
+  "Learner outcome": "學習者能得到什麼",
+  "A welcome, guidance, and a first useful Amis experience.": "有人迎接、引導，並獲得第一次實用的阿美語學習體驗。",
+  "Prepare to speak in real situations.": "練習在真實情境中開口說阿美語。",
+  "Follow a story with learning help nearby.": "追故事的同時，有工具幫助理解、學習。",
+  "Effort": "投入程度",
+  "Small": "少",
+  "Medium": "中",
+  "Large": "多",
+  "Offer": "收費方式",
+  "Paid": "付費",
+  "Free extract, cheap packs.": "免費試用片段，練習包低價販售。",
+  "Free samples then subscription": "免費試看片段，之後訂閱。",
+  "Home": "放在哪裡",
+  "Skool": "Skool",
+  "Sashawaves.com": "Sashawaves.com",
+  "Revenue role": "收入來源",
+  "Indirect: help newcomers start learning and continue.": "間接：幫新手開始學習，並繼續下去。",
+  "Direct sales & potential repeat purchases.": "直接販售，也可能帶動再次購買。",
+  "Model to decide, conflicts with Skool subscription.": "收費模式待定，與 Skool 訂閱有重疊。",
+  "Main dependency": "主要需要什麼",
+  "Fresh audio/content and a clear newcomer goal.": "新的錄音、內容，以及明確的新手學習目標。",
+  "Natural clips, teacher audio, and speaker coordination.": "自然對話片段、老師錄音，以及協調錄音者。",
+  "Writing, performers, and filming/editing capacity.": "寫作、演出，以及拍攝、剪輯能力。",
+  "Small effort": "投入較少",
+  "Give a newcomer a useful Amis win in 5–10 minutes after discovering 語浪/Skool, then offer one clear next step.": "讓剛認識語浪／Skool 的新手，在 5–10 分鐘內學會一點實用的阿美語，再告訴他接下來可以做什麼。",
+  "A compact experience for people arriving from Insta: a few short 2-3 min videos where Osay welcomes them personally and shares what she loves about the language. Listen & understand. Hear & respond. Notice the intriguing particularities of the language. An entertaining intro with valuable Amis content before navigating a larger platform.": "為從 Instagram 找過來的人，準備一段簡短的入門體驗：幾支 2–3 分鐘的短片，由 Osay 親自歡迎他們，分享自己喜歡阿美語的原因。聽懂意思、試著回應，也注意到語言中有趣的特色。在進入較大的平台之前，先有一個好玩又能學到東西的開始。",
+  "Why try it": "為什麼值得試",
+  "Turn social-media curiosity into actual learning. The smallest of these three experiments can help us understand what newcomers find useful.": "把社群媒體帶來的好奇心，轉成真正的學習。這是三個想法中規模最小的嘗試，可以幫我們了解新手覺得什麼有用。",
+  "Main challenge": "主要挑戰",
+  "It still needs fresh content and recording, despite being free. The learner goal and next action must be precise.": "雖然免費，還是需要新的內容和錄音。要清楚知道學習者要學到什麼，以及之後要去哪裡。",
+  "What a small pilot could contain": "小規模試做可以包含什麼",
+  "Two 3-5 minute video where you share core expressions and cultural anecdotes. Perhaps about your village and family, so that 都原 can relate. Can recycle and expand on insta content.": "兩支 3–5 分鐘的影片，分享實用說法和文化小故事。可以談你的部落、家人，讓都會原住民有共鳴，也可以延伸、再利用 Instagram 的內容。",
+  "Add teacher/native audio for all dialects (when different).": "不同語別的說法有差異時，補上各語別老師或母語者的錄音。",
+  "The next step: guide the user to their next destinations according to their needs.": "接下來：依照使用者的需求，引導他找到適合的下一步。",
+  "Questions to decide together": "需要一起討論的問題",
+  "Who is the first target newcomer? Perhaps the people who relate to your experience and want to renew ties with the Amis culture.": "最先要吸引哪一群新手？可能是對你的經驗有共鳴、想重新連結阿美族文化的人。",
+  "Should the next step lead to a class, community, paid product, another learning experience?": "下一步要引導到課程、社群、付費產品，還是另一種學習體驗？",
+  "Should this content be made available before account creation?": "是否讓使用者在註冊帳號前，就能接觸這些內容？",
+  "Possible evolutions": "之後可以怎麼發展",
+  "This is mostly standalone and a stepping stone.": "主要還是維持獨立的小體驗，作為後續學習的起點。",
+  "What would tell us to scale, revise, or stop?": "什麼情況下繼續投入、調整或暫停？",
+  "Watch starts, completion/time, next-step clicks, short-term return.": "觀察有多少人開始、完成，花了多少時間，是否點選下一步，以及短期內是否回來使用。",
+  "A brief usefulness question, alongside production hours and maintenance effort.": "簡單問問使用者覺得有沒有幫助，並記錄內容製作與維護花了多少時間。",
+  "Scale": "擴大投入",
+  "None planned.": "目前沒有這個打算。",
+  "Revise": "調整",
+  "People start but drop out or miss the next step. Simplify or change the learner promise.": "有人開始使用，卻中途離開，或沒找到下一步。可以簡化內容，或調整想帶給學習者的收穫。",
+  "Stop / pause": "停止／暫停",
+  "Repeated small revisions still produce little useful continuation relative to the work required.": "反覆做了小幅調整，仍很少有人繼續學習，與投入的工作不成比例。",
+  "Provisional working split": "初步分工",
+  "Ben": "Ben",
+  "Learning flow, coding, learner experience, and measurement.": "學習流程、程式開發、使用體驗，以及成效觀察。",
+  "Osay": "Osay",
+  "Learner promise, language validation, recording coordination, and promotion.": "學習目標、語言內容確認、錄音協調，以及推廣。",
+  "Both": "一起",
+  "Situation, utterances, next step, and feedback.": "情境、要學的句子、下一步，以及使用者回饋。",
+  "TBD": "待定",
+  "Content writing and editing.": "內容撰寫與編輯。",
+  "Medium effort": "中等投入",
+  "Prepare for real Amis situations with natural clips, careful teacher audio, and structured practice.": "用自然對話片段、清楚的老師錄音，以及有安排的練習，準備在真實情境中使用阿美語。",
+  "A pack contains short videos clips of native speakers saying day to day sentences (think Speak app). About 50 clips around a situation (buying 'icep, learning to fish, listening to a story, or simply introducing yourself). The sentences are authentic but simple, they comewith translations and concise usage help. Features to drill them (e.g. cloze, rapid-fire Q&A) helps the learner understand what they might hear and practice what they could say. Very valuable for speaking/listening, the core of many learners' goals. ,": "每個練習包收錄母語者說日常用語的短片，可以想像成 Speak App 的形式。一個情境大約 50 段，例如買 'icep、學釣魚、聽故事，或簡單介紹自己。句子自然但不複雜，附有翻譯和簡短的用法說明，再搭配填空、快速問答等練習，幫學習者聽懂可能會聽到的話，也練習自己可以怎麼說。對聽力和口說很有幫助，而這正是很多人學阿美語的目標。",
+  "A low-commitment paid step between free tools and longer classes or membership. Audio and language assets can support future products. Straightforward scaling. Potentially an awesome way to help Amis people advertize their livelihood (think Sawtoy, restaurant owners, musicians, wood carvers, etc)": "在免費工具與長期課程、會員訂閱之間，提供負擔較小的付費選擇。錄音與語言素材也能用在未來的產品，方便持續增加主題。也可能是幫阿美族人介紹自己生意、作品的好方式，例如 Sawtoy、餐廳老闆、音樂人、木雕師等。",
+  "Find interested peakers and select natural language that is teachable, useful, and consistent enough for a focused pack.": "找到有意願的錄音者，挑選自然、實用、適合教學，而且能圍繞同一主題的語言內容。",
+  "One possible learner moment": "想像一個使用情境",
+  "Before visiting someone in the buluo, a learner practices an introduction, hears how different speakers might answer, and rehearses a short exchange.": "學習者準備去部落拜訪別人，先練習自我介紹，聽聽不同的人可能怎麼回應，再演練一小段對話。",
+  "What a first pack could contain": "第一個練習包可以包含什麼",
+  "One clear situation and outcome. 50 core sentences for a substantial pack as a working concept, adjustable after prototyping.": "一個明確的情境和學習目標。先以 50 句核心句子構想一個內容充實的練習包，做出原型後再調整。",
+  "Teacher-verified language, selected native clips, slow recordings, translations and brief grammar/usage help.": "經老師確認的語言內容、精選母語者片段、慢速錄音、翻譯，以及簡短的文法與用法說明。",
+  "1-3 drill types, with quick natural answers and fuller practice variants where useful.": "1–3 種練習方式，包括自然、簡短的回應；有需要時，也提供較完整的回答練習。",
+  "Easy access on phones.": "手機上也能方便使用。",
+  "Optional sharing on social media.": "可以選擇分享到社群媒體。",
+  "Small community challenges: points for speaking and recording others.": "社群小挑戰：開口說、幫別人錄音，就能累積點數。",
+  "The core product does not depend on AI.": "核心產品不依賴 AI。",
+  "Which situation makes the clearest useful paid promise? Self-intro, buying groceries, chatting with Ama, ...?": "哪個情境最能讓人清楚知道，付費後能學到什麼實用的東西？自我介紹、買菜、和阿嬤聊天……？",
+  "How to avoid conflict with Rekad content? Providemore depth, breadth and tools. Rekad are a good complement.": "怎麼避免和 Rekad 的內容重疊？提供更深入、更廣的內容和練習工具，讓兩者互相補充。",
+  "How many natural clips are enough, and which drills offer the most value?": "要多少自然對話片段才足夠？哪些練習方式最有幫助？",
+  "How to find reliable speakers willing to cooperate? People who need advertizing.": "怎麼找到可靠、願意合作的錄音者？可以找有宣傳需求的人。",
+  "How to solve the dialect issue? Create packs for Southern/Coastal Amis first.": "怎麼處理語別差異？先做南部／海岸阿美語的練習包。",
+  "How would someone buy and access a pack through the website/Skool?": "使用者要如何透過網站／Skool 購買、使用練習包？",
+  "What price and production workload would make a first pack worthwhile?": "什麼樣的價格和製作工作量，能讓第一個練習包值得做？",
+  "Later packs could turn into skill & culture leanrning. Centered on a person, craft, place, or business.": "之後可以延伸到技藝與文化學習，以一個人、一項工藝、一個地方或一門生意為主題。",
+  "Branching choices, role-play, register variants": "分支選擇、角色扮演，以及不同場合的說法。",
+  "Mission completion could become interaction upgrades within packs.": "完成任務的設計，也可以讓練習包有更豐富的互動。",
+  "Add deeper review or bounded AI help where it serves the learning experience.": "在確實有助於學習的地方，加入更深入的複習，或範圍明確的 AI 輔助。",
+  "Track purchase, starts/completion, drills/replay, return use, confidence/usefulness feedback, and interest in another pack. Compare revenue with content and engineering hours, ongoing support, and any conversion into classes/community.": "觀察購買、開始和完成的情況、練習與重播次數、是否回來使用、信心與實用性的回饋，以及是否想買下一包。比較收入與內容製作、開發、持續支援所花的時間，也看看是否帶動課程或社群參與。",
+  "People buy, use the pack, report useful practice, and want another.": "有人購買、實際使用，覺得練習有幫助，也想再買一包。",
+  "Purchase interest and actual use diverge. Adjust the promise, content balance, drills, access, or price.": "購買意願和實際使用情況有落差。調整產品訴求、內容比例、練習方式、使用方式或價格。",
+  "Demand or learner value remains weak after a bounded revision, or each pack costs too much to sustain.": "做過一輪有限度的調整後，需求或學習效果仍不明顯，或每一包的製作成本都高到難以持續。",
+  "Product, coding, drills, learner experience, measurement, and reusable packaging.": "產品設計、程式開發、練習功能、使用體驗、成效觀察，以及可重複使用的製作方式。",
+  "Language validation, teacher audio, speaker coordination, and launch/promotion.": "語言內容確認、老師錄音、錄音者協調，以及推出、推廣。",
+  "Topic, utterances, clips, editing priorities, and feedback.": "主題、要學的句子、影音片段、編輯重點，以及使用者回饋。",
+  "Writing and clip production, finding the speakers.": "內容撰寫、片段製作，以及尋找錄音者。",
+  "Paid (subscription)": "付費（訂閱）",
+  "Large effort": "投入較多",
+  "Amis Netflix. Follow humoristic short drama with learning help.": "阿美語版 Netflix。看有趣的短劇，同時有工具幫助學習。",
+  "Modern situations, recurring characters, and natural Amis in 30–60 second episodes. The story brings people back. Subtitles, lookup, and replay help them understand and practice.": "每集 30–60 秒，以現代生活情境、固定角色和自然的阿美語呈現。故事讓人想繼續看，字幕、查詞和重播則幫助理解與練習。",
+  "An entertaining format that can travel through social media and showcase storytellers and performers. Unique content, great learning value, branding boost. The content can support other learning formats.": "有趣、適合在社群媒體傳播的形式，也能讓說故事的人和演出者被看見。內容有特色、能學到東西，也能提升品牌形象。素材還可以用在其他學習形式。",
+  "Good dialogue, performers, pacing, and production coordination. Writing and filming/editing may dominate the cost.": "需要好的對白、演出、節奏，以及製作協調。寫作、拍攝和剪輯可能占掉大部分成本。",
+  "A learner watches a one-minute buluo comedy scene, checks an unfamiliar line, learns a new expression, replays it, then opens the next episode to find out what happens. They rewatch the content are start using the lines in real life.": "學習者看了一分鐘的部落喜劇片段，查一句不熟悉的對白、學到新說法，再重播幾次，接著點開下一集，想知道故事會怎麼發展。之後會回來重看，也開始在日常生活中用到這些台詞。",
+  "One storyline and a small recurring cast, 6–10 episodes of 30–60 seconds.": "一條故事主線、少量固定角色，共 6–10 集，每集 30–60 秒。",
+  "Vertical video suited to phones, natural language and reliable subtitles/translations.": "適合手機觀看的直式影片，自然的語言，以及準確的字幕和翻譯。",
+  "Light production that gives the story and language a fair test.": "用精簡的製作方式，先看看故事和語言內容能不能吸引人。",
+  "Minimal learning support: lookup and replay, with shadowing or bookmarking.": "基本的學習輔助：查詞、重播，以及跟讀或收藏。",
+  "A free sample followed by a paid season or subscription test.": "先提供免費試看，再嘗試整季付費或訂閱。",
+  "Who is the audience, and which genre would they keep watching?": "觀眾是誰？什麼類型的故事會讓他們持續看下去？",
+  "Who can write and perform dialogue that is natural and entertaining?": "誰能寫出、演出自然又有趣的對白？",
+  "What is the smallest season that still tests continuation and anticipation?": "最少要做幾集，才能看出觀眾會不會追下去、期待下一集？",
+  "Which language variety, learning tools, and free-to-paid boundary fit?": "哪種語別、學習工具，以及免費試看到付費觀看的安排最適合？",
+  "Who can film/edit, and what production workload is realistic?": "誰能拍攝、剪輯？實際能負擔多少製作工作？",
+  "Discussion around the plot, shadowing sahring or reenactment, and Mission Packs built around scenes could follow. Longer seasons and richer tools depending on what the small pilot teaches us.": "之後可以加入劇情討論、跟讀分享或重演，也可以依照劇中情境做成情境練習包。再根據小規模試做的結果，考慮較長的季度和更豐富的學習工具。",
+  "Watch episode completion, continuation from episode 1 through the season, repeat viewing, free-to-paid conversion, and “would you watch another season?” feedback. Compare production hours/cost per completed viewer and payer, plus platform maintenance.": "觀察每集的看完比例、從第一集一路追下去的情況、重看次數、免費觀眾轉為付費的比例，以及「會想看下一季嗎？」的回饋。比較製作時間、每位看完的觀眾與付費觀眾所分攤的成本，也算上平台維護。",
+  "Viewers keep watching, want another season, and some pay at a production cost we can repeat.": "觀眾持續看、想看下一季，而且有些人願意付費，製作成本也在能持續負擔的範圍內。",
+  "The first episode attracts interest but continuation drops. Rework the story, pacing, language support, or paid boundary.": "第一集吸引人，但後續觀看掉下來。調整故事、節奏、學習輔助，或免費與付費內容的安排。",
+  "The small season does not sustain viewing or paid interest, or production demands outweigh the result.": "小規模試做仍無法讓人持續觀看或願意付費，或製作負擔超過得到的成果。",
+  "Playback and study experience, subtitles and lookup, implementation and measurement.": "播放與學習體驗、字幕和查詞、功能開發，以及成效觀察。",
+  "Speaker/cast relationships, language review, recording coordination and promotion.": "錄音者與演員聯繫、語言內容確認、錄音協調，以及推廣。",
+  "Format, editorial direction, pilot scope, learning support, and feedback.": "形式、內容方向、試做範圍、學習輔助，以及使用者回饋。",
+  "Writing, directing, filming, and editing.": "編劇、導演、拍攝和剪輯。",
+  "Phase 3 · Later ideas": "第三階段・未來方向",
+  "Possible ideas for later": "之後可以考慮的想法",
+  "Some possibilities, thatI'll keep track of, not a complete list. They depend on the direction of 語浪 and its website, what we learn from the tools and first new products, available content and production capacity, and user behavior and revenue. No decision needed now.": "這裡先記下一些可能的方向，並不是完整清單。要看語浪和網站未來怎麼發展、現有工具與第一批新產品讓我們學到什麼、有哪些內容和製作人力，以及使用情況和收入。目前不用決定。",
+  "Graded video library": "分級影片庫",
+  "Interesting Amis input organized by learner level. Playful and relax content. Can be story-telling, games/enigmas or just talking about popular movies with live drawing for comprehesible input.": "依程度整理有趣的阿美語內容，讓學習者輕鬆接觸語言。可以說故事、玩遊戲、猜謎，或聊熱門電影，邊講邊畫，讓人更容易理解。",
+  "Pattern & listening practice": "句型與聽力練習",
+  "Useful mechanics drawn from the existing exam tool. Some modeules can be valuable outside of the exam study.": "運用現有考試工具中實用的練習方式。有些功能即使不為考試，也能幫助學習。",
+  "Beginner curriculum": "初學者課程",
+  "A coherent path built on mature, reusable lesson content.": "以成熟、可重複使用的課程內容，安排連貫的學習路徑。",
+  "Progressive audio course": "循序漸進的音訊課程",
+  "Audio-first learning with manageable increments and repetition. Can be listened on the audio even by people who are not interested in reading.": "以聆聽為主，每次增加一點內容，再反覆練習。即使對閱讀不感興趣，也能透過音訊學習。",
+  "Other possibilities: human feedback/correction, richer review, selective AI features, and community extensions.": "其他可能：真人回饋與訂正、更豐富的複習、在適合的地方加入 AI，以及延伸社群互動。",
+  "What I’d like to discuss": "我想和你討論的事",
+  "Introducing the existing tools": "如何推出現有工具",
+  "What should the extension be called? Does it fit as the first collab product to be pushed?": "擴充功能要叫什麼名字？適合當作我們第一個合作推出的產品嗎？",
+  "Which new ideas interest you?": "哪些新想法讓你感興趣？",
+  "Among the 3 propositions: which to pursue, set aside, or discuss? If several appeal, which deserves the first focused conversation?": "三個提議中，哪些想做、先放一邊，或再聊聊？如果不只一個有興趣，想先認真討論哪個？",
+  "Where should the products live?": "產品要放在哪裡？",
+  "Which experiences belong on the 語浪 website, in the Skool community, or on a separate page?": "哪些體驗適合放在語浪網站、Skool 社群，或獨立頁面？",
+  "Practical production capacity": "實際能投入的製作人力",
+  "Who can validate language, record, coordinate speakers, write, or film/edit? What amount of work feels realistic for one small pilot?": "誰能確認語言內容、錄音、協調錄音者、寫作，或拍攝、剪輯？先做一個小規模版本，多少工作量比較實際？",
+  "Back to overview ↑": "回到總覽 ↑",
+  "Proposal sections": "提案章節",
+  "Browser extension screenshots": "瀏覽器擴充功能截圖",
+  "Browser extension image gallery": "瀏覽器擴充功能圖庫",
+  "Amis word lookup with a green accent": "綠色介面的阿美語查詞畫面",
+  "Exploring a root and its examples with a green accent": "綠色介面的詞根與例句查詢畫面",
+  "Amis word lookup with a red accent": "紅色介面的阿美語查詞畫面",
+  "Exploring a root and its examples with a red accent": "紅色介面的詞根與例句查詢畫面",
+  "Lookup correcting a word to its root": "將輸入詞修正為詞根的查詞畫面",
+  "Lookup recognizing an alternate spelling": "辨識不同拼法的查詞畫面",
+  "Previous extension screenshot": "上一張擴充功能截圖",
+  "Next extension screenshot": "下一張擴充功能截圖",
+  "Amis player screenshots": "阿美語播放器截圖",
+  "Amis player image gallery": "阿美語播放器圖庫",
+  "Amis recording library with language-variety filters": "可依語別篩選的阿美語錄音列表",
+  "Video playback with synchronized Amis and Chinese subtitles": "影片播放與同步的阿美語／中文字幕",
+  "Amis word definition shown within the player": "播放器內顯示的阿美語詞義",
+  "Previous player screenshot": "上一張播放器截圖",
+  "Next player screenshot": "下一張播放器截圖",
+  "New product images": "新產品示意圖",
+  "Start Here product concept": "入門體驗產品示意圖",
+  "Mission Packs product concept": "情境練習包產品示意圖",
+  "Amis Microdrama product concept": "阿美語短劇產品示意圖",
+  "Product comparison": "產品比較",
+  "Illustration of the Start Here newcomer learning experience": "新手入門體驗的示意圖",
+  "Illustration of situation-based Amis speaking and listening practice": "阿美語情境口說與聽力練習示意圖",
+  "Illustration of short serialized Amis stories with learning support": "附有學習輔助的阿美語連續短劇示意圖",
+  "Partly story-telling, with a few listen, recognize and respond interactions. The value is delivered without financial friction.": "以說故事為主，搭配一些聆聽、辨認和回應的互動，讓學習者先獲得實際收穫，不必先付費。",
+  "Choose language": "選擇語言"
+}
+  </script>
   <script>
     // Optional enhancements; all proposal content and navigation work without JavaScript.
     const sectionLinks = [...document.querySelectorAll('.nav-links a')];
@@ -1026,6 +1294,59 @@
       img.addEventListener('error', () => { img.hidden = true; });
       img.src = img.dataset.src;
     });
+    // Switch text in place so anchors, open details, and gallery selections stay intact.
+    const zhTranslations = JSON.parse(document.getElementById('proposal-translations').textContent);
+    const normalizeText = text => text.replace(/\s+/g, ' ').trim();
+    const translatedText = [];
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: node => node.parentElement.closest('script, style, .language-toggle') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+    });
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      const key = normalizeText(node.nodeValue);
+      if (!Object.hasOwn(zhTranslations, key)) continue;
+      const english = node.nodeValue;
+      const leading = english.match(/^\s*/)[0];
+      const trailing = english.match(/\s*$/)[0];
+      translatedText.push({ node, english, chinese: leading + zhTranslations[key] + trailing });
+    }
+    const translatedAttributes = [];
+    document.querySelectorAll('[alt], [aria-label]').forEach(element => {
+      ['alt', 'aria-label'].forEach(attribute => {
+        if (!element.hasAttribute(attribute)) return;
+        const english = element.getAttribute(attribute);
+        if (Object.hasOwn(zhTranslations, normalizeText(english))) {
+          translatedAttributes.push({ element, attribute, english, chinese: zhTranslations[normalizeText(english)] });
+        }
+      });
+    });
+    const languageButtons = [...document.querySelectorAll('[data-language]')];
+    const englishDescription = document.querySelector('meta[name="description"]').content;
+    const chineseDescription = '現有的阿美語閱讀與聆聽工具、三個新的學習產品構想，以及如何搭配語浪。';
+    const languageStorageKey = 'sashawaves-proposal-language';
+    const setLanguage = (language, keepPosition = false) => {
+      const anchors = [...document.querySelectorAll('section[id], article[id]')];
+      const anchor = keepPosition ? anchors.filter(element => element.getBoundingClientRect().top <= nav.offsetHeight + 60).at(-1) : null;
+      const offset = anchor ? anchor.getBoundingClientRect().top : 0;
+      const chinese = language === 'zh-Hant';
+      translatedText.forEach(item => { item.node.nodeValue = chinese ? item.chinese : item.english; });
+      translatedAttributes.forEach(item => { item.element.setAttribute(item.attribute, chinese ? item.chinese : item.english); });
+      document.documentElement.lang = chinese ? 'zh-Hant' : 'en';
+      document.title = chinese ? '開發方向與產品提案' : 'Dev direction & products proposal';
+      document.querySelector('meta[name="description"]').content = chinese ? chineseDescription : englishDescription;
+      languageButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.language === language)));
+      try { localStorage.setItem(languageStorageKey, language); } catch {}
+      syncNavHeight();
+      if (anchor) window.scrollBy(0, anchor.getBoundingClientRect().top - offset);
+      onScroll();
+    };
+    languageButtons.forEach(button => button.addEventListener('click', () => setLanguage(button.dataset.language, true)));
+    let savedLanguage;
+    try { savedLanguage = localStorage.getItem(languageStorageKey); } catch {}
+    const requestedLanguage = new URLSearchParams(location.search).get('lang');
+    const initialLanguage = requestedLanguage === 'en' ? 'en' : ['zh', 'zh-Hant'].includes(requestedLanguage) ? 'zh-Hant' : savedLanguage === 'en' ? 'en' : 'zh-Hant';
+    setLanguage(initialLanguage);
+
     let printState = [];
     window.addEventListener('beforeprint', () => {
       if (printState.length) return;
